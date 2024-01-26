@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\V1\Clients;
-use App\Http\Requests\StoreClientsRequest;
-use App\Http\Requests\UpdateClientsRequest;
+use App\Http\Requests\V1\StoreClientsRequest;
+use App\Http\Requests\V1\UpdateClientsRequest;
 use Illuminate\Http\Request;
 use \Exception;
 use App\Http\Resources\V1\ClientsResource;
 use App\Http\Resources\V1\ClientsCollection;
+use Illuminate\Support\Facades\Hash;
 
 class ClientsController extends Controller
 {
@@ -43,22 +44,18 @@ class ClientsController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreClientsRequest $request)
     {
-        //
-    }
+        try {
+            $data = $request->all();
+            $data["password"] = Hash::make($request->input("password"));
 
+            $client = new ClientsResource(Clients::create($data));
+            return response()->json(["success" => true, "data" => $client], $this->success);
+        } catch (Exception) {
+            return response()->json(["success" => false, "msg" => "There wan an error when inserting the data."], $this->notFound);
+        }
+    }
     /**
      * Display the specified resource.
      */
@@ -79,19 +76,23 @@ class ClientsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Clients $clients)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateClientsRequest $request, Clients $clients)
+    public function update(UpdateClientsRequest $request, Clients $client)
     {
-        //
+        try {
+            $data = $request->all();
+            if ($request->has("password")) {
+                $data["password"] = Hash::make($request->input("password"));
+            }
+            $client->update($data);
+
+            $client = new ClientsResource($client);
+
+            return response()->json(["success" => true, "data" => $client], $this->success);
+        } catch (Exception) {
+            return response()->json(["success" => false, "msg" => "There wan an error when inserting the data."], $this->notFound);
+        }
     }
 
     /**

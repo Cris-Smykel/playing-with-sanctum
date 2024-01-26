@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreClientsRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StoreClientsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,17 @@ class StoreClientsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => ["required", "max:255"],
+            "email" => ["required", "email", "unique:clients,email"],
+            "password" => ["required", "min:8", "max:255"],
+            "businessId" => ["required", Rule::exists("businesses", "id")],
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            "business_id" => $this->businessId,
+        ]);
     }
 }

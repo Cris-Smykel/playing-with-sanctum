@@ -9,6 +9,12 @@ class Businesses extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        "name",
+        "email",
+        "password",
+    ];
+
     public function Clients()
     {
         return $this->hasMany(Clients::class, "business_id", "id");

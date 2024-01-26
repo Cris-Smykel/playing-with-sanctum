@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\V1\Businesses;
-use App\Http\Requests\StoreBusinessesRequest;
-use App\Http\Requests\UpdateBusinessesRequest;
+use App\Http\Requests\V1\StoreBusinessesRequest;
+use App\Http\Requests\V1\UpdateBusinessesRequest;
 use App\Http\Resources\V1\BusinessesResource;
 use App\Http\Resources\V1\BusinessesCollection;
 use Exception;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
 
 class BusinessesController extends Controller
 {
@@ -46,19 +46,18 @@ class BusinessesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreBusinessesRequest $request)
     {
-        //
+        try {
+            $data = $request->all();
+            $data["password"] = Hash::make($request->input("password"));
+            $business = new BusinessesResource(Businesses::create($data));
+            return response()->json(["success" => true, "data" => $business], $this->success);
+        } catch (Exception) {
+            return response()->json(["success" => false, "msg" => "There wan an error when inserting the data."], $this->notFound);
+        }
     }
 
     /**
@@ -81,19 +80,23 @@ class BusinessesController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Businesses $businesses)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBusinessesRequest $request, Businesses $businesses)
+    public function update(UpdateBusinessesRequest $request, Businesses $business)
     {
-        //
+        try {
+            $data = $request->all();
+            if ($request->has("password")) {
+                $data["password"] = Hash::make($request->input("password"));
+            }
+            $business->update($data);
+
+            $business = new BusinessesResource($business);
+
+            return response()->json(["success" => true, "data" => $business], $this->success);
+        } catch (Exception) {
+            return response()->json(["success" => false, "msg" => "There wan an error when inserting the data."], $this->notFound);
+        }
     }
 
     /**
