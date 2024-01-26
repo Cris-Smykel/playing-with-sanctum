@@ -3,6 +3,7 @@
 namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreBusinessesRequest extends FormRequest
 {
@@ -11,7 +12,8 @@ class StoreBusinessesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $businessUser = Auth::guard("business")->user();
+        return $businessUser !== null && $businessUser->tokenCan("create");
     }
 
     /**

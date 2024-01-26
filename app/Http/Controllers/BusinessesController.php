@@ -10,6 +10,7 @@ use App\Http\Resources\V1\BusinessesCollection;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class BusinessesController extends Controller
 {
@@ -50,6 +51,7 @@ class BusinessesController extends Controller
      */
     public function store(StoreBusinessesRequest $request)
     {
+        return  Auth::guard("business")->user();
         try {
             $data = $request->all();
             $data["password"] = Hash::make($request->input("password"));

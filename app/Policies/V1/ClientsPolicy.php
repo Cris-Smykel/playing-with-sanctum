@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\V1;
 
 use App\Models\User;
-use App\Models\V1\Businesses;
+use App\Models\V1\Clients;
 use Illuminate\Auth\Access\Response;
 
-class BusinessesPolicy
+class ClientsPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class BusinessesPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Businesses $businesses): bool
+    public function view(User $user, Clients $clients): bool
     {
         //
     }
@@ -35,7 +35,7 @@ class BusinessesPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Businesses $businesses): bool
+    public function update(User $user, Clients $clients): bool
     {
         //
     }
@@ -43,7 +43,7 @@ class BusinessesPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Businesses $businesses): bool
+    public function delete(User $user, Clients $clients): bool
     {
         //
     }
@@ -51,7 +51,7 @@ class BusinessesPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Businesses $businesses): bool
+    public function restore(User $user, Clients $clients): bool
     {
         //
     }
@@ -59,7 +59,7 @@ class BusinessesPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Businesses $businesses): bool
+    public function forceDelete(User $user, Clients $clients): bool
     {
         //
     }
