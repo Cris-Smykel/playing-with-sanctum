@@ -4,6 +4,7 @@ namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class StoreClientsRequest extends FormRequest
 {
@@ -12,7 +13,8 @@ class StoreClientsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $clientUser = Auth::guard("client")->user();
+        return $clientUser !== null && $clientUser->tokenCan("create");
     }
 
     /**
